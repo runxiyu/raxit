@@ -67,12 +67,11 @@ func main_internal() error {
 event_loop:
 	for {
 		if event := sdl.PollEvent(); event != nil {
-			switch event.(type) {
+			switch event := event.(type) {
 			case *sdl.QuitEvent:
 				break event_loop
 			case *sdl.WindowEvent:
-				window_event := event.(*sdl.WindowEvent)
-				switch window_event.Event {
+				switch event.Event {
 				case sdl.WINDOWEVENT_RESIZED:
 					w, h, err = renderer.GetOutputSize()
 					if err != nil {
@@ -104,7 +103,7 @@ event_loop:
 
 
 					renderer.Present()
-					window.SetSize(window_event.Data1, window_event.Data2)
+					window.SetSize(event.Data1, event.Data2)
 				}
 			}
 		}
