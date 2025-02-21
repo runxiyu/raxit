@@ -42,7 +42,9 @@ func main_internal() error {
 	if err != nil {
 		return err
 	}
-	defer window.Destroy()
+	defer func() {
+		_ = window.Destroy()
+	}()
 
 
 	font, err = ttf.OpenFont("/usr/share/fonts/rsms-inter-vf-fonts/InterVariable.ttf", 20);
@@ -61,7 +63,9 @@ func main_internal() error {
 	}
 
 	bg = sdl.Rect{X: 0, Y: 0, W: w, H: h}
-	renderer.FillRect(&bg)
+	if err = renderer.FillRect(&bg); err != nil {
+		return err
+	}
 	renderer.Present()
 
 event_loop:
@@ -79,8 +83,12 @@ event_loop:
 					}
 
 					bg = sdl.Rect{X: 0, Y: 0, W: w, H: h}
-					renderer.SetDrawColor(0, 0, 0, 255)
-					renderer.FillRect(&bg)
+					if err = renderer.SetDrawColor(0, 0, 0, 255); err != nil {
+						return err
+					}
+					if err = renderer.FillRect(&bg); err != nil {
+						return err
+					}
 
 					var text *sdl.Surface
 					if text, err = font.RenderUTF8Blended("Hello, World!", sdl.Color{R: 255, G: 255, B: 255, A: 255}); err != nil {
@@ -99,7 +107,9 @@ event_loop:
 					text_rect.X = 0
 					text_rect.Y = 0
 
-					renderer.Copy(texture, nil, &text_rect)
+					if err = renderer.Copy(texture, nil, &text_rect); err != nil {
+						return err
+					}
 
 
 					renderer.Present()
