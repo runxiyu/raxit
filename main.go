@@ -3,14 +3,11 @@ package main
 // TODO: Fix error handling
 
 import (
-	"errors"
 	"log"
 
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
 )
-
-var err_video_driver = errors.New("cannot set video driver hint")
 
 func main() {
 	if err := main_internal(); err != nil {
@@ -30,11 +27,6 @@ func main_internal() error {
 		return err
 	}
 	defer ttf.Quit()
-
-
-	if !sdl.SetHint(sdl.HINT_VIDEODRIVER, "wayland") {
-		log.Println(err_video_driver)
-	}
 
 	if err = sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		return err
